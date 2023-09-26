@@ -124,7 +124,7 @@ public:
         list_ch1->setFont(font2);
         label_4 = new QLabel(centralWidget);
         label_4->setObjectName(QString::fromUtf8("label_4"));
-        label_4->setGeometry(QRect(560, 10, 61, 21));
+        label_4->setGeometry(QRect(550, 10, 71, 21));
         label_4->setFont(font);
         verticalLayoutWidget = new QWidget(centralWidget);
         verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
@@ -163,7 +163,7 @@ public:
         pushVoltage->setFont(font);
         label_3 = new QLabel(centralWidget);
         label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setGeometry(QRect(720, 10, 61, 21));
+        label_3->setGeometry(QRect(710, 10, 71, 21));
         label_3->setFont(font);
         lineEdit_2 = new QLineEdit(centralWidget);
         lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
@@ -224,7 +224,7 @@ public:
         lineEdit_6->setFont(font);
         label_6 = new QLabel(centralWidget);
         label_6->setObjectName(QString::fromUtf8("label_6"));
-        label_6->setGeometry(QRect(710, 60, 31, 31));
+        label_6->setGeometry(QRect(700, 60, 41, 31));
         label_6->setFont(font);
         label_8 = new QLabel(centralWidget);
         label_8->setObjectName(QString::fromUtf8("label_8"));
@@ -237,7 +237,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1261, 23));
+        menuBar->setGeometry(QRect(0, 0, 1261, 26));
         menu = new QMenu(menuBar);
         menu->setObjectName(QString::fromUtf8("menu"));
         MainWindow->setMenuBar(menuBar);
@@ -293,7 +293,7 @@ public:
         comboVolt1_2->setItemText(0, QCoreApplication::translate("MainWindow", "\350\257\267\351\200\211\346\213\251", nullptr));
 
         label_temperature->setText(QCoreApplication::translate("MainWindow", "\344\270\262\345\217\243\345\217\267", nullptr));
-        label_5->setText(QCoreApplication::translate("MainWindow", "\347\224\265\346\265\201\357\274\210uA\357\274\211", nullptr));
+        label_5->setText(QCoreApplication::translate("MainWindow", "\347\224\265\346\265\201(uA)", nullptr));
         pushVoltage_3->setText(QCoreApplication::translate("MainWindow", "\345\217\221\351\200\201", nullptr));
         lineEdit_5->setText(QCoreApplication::translate("MainWindow", "30", nullptr));
         lineEdit_6->setText(QCoreApplication::translate("MainWindow", "0", nullptr));

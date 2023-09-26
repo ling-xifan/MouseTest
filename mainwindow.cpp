@@ -9,7 +9,7 @@ using namespace std;
 //static char* ServerIP = "192.168.4.1";
 QString currentCOM = "";
 //192.168.4.1:8090
-static int time_init = 0, time_end = 50;
+static int time_init = 0, time_end = 500;
 static int range_min = 0, range_max = 100;
 static int Started = 0;                         //标志是否已开始采集
 static double time_range;
@@ -60,7 +60,7 @@ qDebug() << "begin drawing1"<<endl;
 
 //        qDebug() << "dp: " << array_signal[num][0] << endl;
 
-        for (int i = 0; i <= 500; i++)
+        for (int i = 0; i <= time_end; i++)
             series[num]->append(-i, array_signal[num][i]/1000);
 
         //设置listview
