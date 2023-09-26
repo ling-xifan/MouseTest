@@ -11,6 +11,7 @@
 #include <WiFiType.h>
 #include <WiFiUdp.h>
 
+#define Trigger    4
 //pwm_define
 // use first channel of 16 channels (started from zero)
 #define LEDC_CHANNEL_0     0
@@ -224,7 +225,14 @@ void sweep_read()
     }
   }
 }
-
+boolean state = HIGH;
+//上升沿触发外部中断
+void irq1()
+{
+    
+      digitalWrite(32,state);
+      state = !state;
+}
 void ad_init(void)
 {
   pinMode(ad_start, OUTPUT);
@@ -268,15 +276,18 @@ void setup() {
   pinMode(33, OUTPUT);
   pinMode(32, OUTPUT);
   pinMode(25, OUTPUT);
+  pinMode(Trigger, INPUT);
+  attachInterrupt(Trigger, irq1, RISING);    // 设置外部中断
   digitalWrite(33,1);
-  digitalWrite(25,0);
-  ledcAnalogWrite(LEDC_CHANNEL_0, 6000);
+  digitalWrite(32,0);
+  ledcAnalogWrite(LEDC_CHANNEL_0, 8191);
 }
 int receivedData[3];
 int recData;
 int SendCurrent = 10;
 int ResHigh = 30;
 int ResLow = 0;
+int ledFlag = 0;
 void loop() {
   delay(5000);
   while(1){
@@ -290,7 +301,6 @@ void loop() {
         Serial.print("\r\n");
         if (Serial.available() >= 3 * sizeof(int))
         {
-           digitalWrite(33,0);
            byte buffer[sizeof(int)];
          for (int i = 0; i < 3; ++i)
          {
@@ -322,8 +332,18 @@ void loop() {
             {
               write_dag(0);
             }
-        delay(500);   
+        delay(500); 
+        if(ledFlag)  
+        {
           digitalWrite(33,1);
+          ledFlag = 0;
+        }
+        else
+        {
+          digitalWrite(33,0);
+          ledFlag = 1;
+        }
+          
         }
     
  
