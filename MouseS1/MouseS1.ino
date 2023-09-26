@@ -226,12 +226,32 @@ void sweep_read()
   }
 }
 boolean state = HIGH;
+boolean isEthanol = LOW;
+int receivedData[3];
+int recData;
+int SendCurrent = 10;
+int ResHigh = 30;
+int ResLow = 0;
+int ledFlag = 0;
 //上升沿触发外部中断
 void irq1()
 {
     
-      digitalWrite(32,state);
+     
+     if(isEthanol)
+     {
+       digitalWrite(32,state);
       state = !state;
+          write_dag(65535*SendCurrent/100);
+          delayMicroseconds(600);
+           write_dag(0);
+           isEthanol = LOW;
+      }
+       else
+      {
+          write_dag(0);
+     }
+      
 }
 void ad_init(void)
 {
@@ -272,7 +292,7 @@ void setup() {
 //  Serial.println("ad init done");
 //  Serial.println(read_reg(0x00));
    da_init();
-  write_dag(65533);
+  write_dag(0);
   pinMode(33, OUTPUT);
   pinMode(32, OUTPUT);
   pinMode(25, OUTPUT);
@@ -282,12 +302,7 @@ void setup() {
   digitalWrite(32,0);
   ledcAnalogWrite(LEDC_CHANNEL_0, 8191);
 }
-int receivedData[3];
-int recData;
-int SendCurrent = 10;
-int ResHigh = 30;
-int ResLow = 0;
-int ledFlag = 0;
+
 void loop() {
   delay(5000);
   while(1){
@@ -324,14 +339,14 @@ void loop() {
             ResLow = receivedData[2];
           }
         }
-           if((ftemp1[0]/1000)>=ResLow && (ftemp1[0]/1000) <= ResHigh)
-            {
-              write_dag(65535*SendCurrent/100);
-            }
-            else
-            {
-              write_dag(0);
-            }
+     if((ftemp1[0]/1000)>=ResLow && (ftemp1[0]/1000) <= ResHigh)
+     {
+         isEthanol = HIGH;
+      }
+      else
+      {
+        isEthanol = LOW;
+      }
         delay(500); 
         if(ledFlag)  
         {
