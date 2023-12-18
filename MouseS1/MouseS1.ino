@@ -35,13 +35,7 @@ void ledcAnalogWrite(uint8_t channel, uint32_t duty)
   ledcWrite(channel, duty);
 }
 
-//wifi define 
-//const char *ssid = "6To071701";
-//const char *password = "6To071701";
-//const char *ssid = "1To071706";
-//const char *password = "1To071706";
 float Air_data[12];
-//WiFiServer server(8090);
 
 //ad define
 #define ad_start 22
@@ -237,22 +231,32 @@ int ledFlag = 0;
 void irq1()
 {
     
-     
-     if(isEthanol)
-     {
-       digitalWrite(32,state);
-      state = !state;
-          write_dag(65535*SendCurrent/100);
-          delayMicroseconds(600);
-           write_dag(0);
-           isEthanol = LOW;
-      }
-       else
-      {
-          write_dag(0);
-     }
+//     if(isEthanol)
+//     {
+//       digitalWrite(32,state);
+//       state = !state;
+//          write_dag(65535*SendCurrent/100);
+//          delayMicroseconds(600);
+//           write_dag(0);
+//           isEthanol = LOW;
+//      }
+//       else
+//      {
+//          write_dag(0);
+//     }
       
 }
+esp_timer_handle_t  periodic_timer;
+static void periodic_timer_callback(void* arg)
+{
+//    int64_t time_since_boot = esp_timer_get_time();
+//    digitalWrite(32,state);
+//    state = !state;
+      write_dag(65535*SendCurrent/100);
+      delayMicroseconds(600);
+      write_dag(0);
+}
+
 void ad_init(void)
 {
   pinMode(ad_start, OUTPUT);
@@ -271,28 +275,18 @@ void ad_init(void)
 
 void setup() {
   Serial.begin(115200);
-//  Serial.println();
-//  Serial.println("Configuring access point...");
-
-  // You can remove the password parameter if you want the AP to be open.
-//  WiFi.softAP(ssid, password);
-//  IPAddress myIP = WiFi.softAPIP();
-//  Serial.print("AP IP address: ");
-//  Serial.println(myIP);
-//  server.begin();
-
-//  Serial.println("Server started");
   
   ledcSetup(LEDC_CHANNEL_0, LEDC_BASE_FREQ, LEDC_TIMER_13_BIT);
   ledcAttachPin(LED_PIN, LEDC_CHANNEL_0);
   
-//  Serial.println("pwm init done");
-  
   ad_init();
-//  Serial.println("ad init done");
-//  Serial.println(read_reg(0x00));
-   da_init();
+  da_init();
   write_dag(0);
+
+  const esp_timer_create_args_t periodic_timer_args = {
+            .callback = &periodic_timer_callback  };
+  ESP_ERROR_CHECK(esp_timer_create(&periodic_timer_args, &periodic_timer));
+  ESP_ERROR_CHECK(esp_timer_start_periodic(periodic_timer, 7692));//1s回调一次
   pinMode(33, OUTPUT);
   pinMode(32, OUTPUT);
   pinMode(25, OUTPUT);
@@ -348,20 +342,17 @@ void loop() {
         isEthanol = LOW;
       }
         delay(500); 
-        if(ledFlag)  
-        {
-          digitalWrite(33,1);
-          ledFlag = 0;
-        }
-        else
-        {
-          digitalWrite(33,0);
-          ledFlag = 1;
-        }
+//        if(ledFlag)  
+//        {
+//          digitalWrite(33,1);
+//          ledFlag = 0;
+//        }
+//        else
+//        {
+//          digitalWrite(33,0);
+//          ledFlag = 1;
+//        }
           
-        }
-    
- 
-        
+        } 
 
 }
