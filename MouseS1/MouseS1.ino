@@ -27,11 +27,6 @@
 
 void ledcAnalogWrite(uint8_t channel, uint32_t duty) 
 {
-  //pwm control 
-  // calculate duty, 8191 from 2 ^ 13 - 1
-  //uint32_t duty = (8191 / valueMax) * min(value, valueMax);
-
-  // write duty to LEDC
   ledcWrite(channel, duty);
 }
 
@@ -111,8 +106,8 @@ u8 volt=53;
 //da pin define     (num=GPIO_num)
 #define HSPI_MOSI       13
 #define HSPI_SCLK       14
-//#define HSPI_SS_DAg     12
-#define HSPI_CS     2  
+#define HSPI_CS     12
+//#define HSPI_CS     12  
 
 void wait()
 {
@@ -179,10 +174,7 @@ void da_init(void)
   hspi = new SPIClass(HSPI);
   hspi->begin();
   pinMode(HSPI_CS, OUTPUT);
-  //pinMode(HSPI_SS_DAd, OUTPUT);
   digitalWrite(HSPI_CS, HIGH);
-//  digitalWrite(HSPI_SS_DAd, HIGH);
- // digitalWrite(HSPI_CS, LOW);
   hspi->beginTransaction(SPISettings(spiClk, MSBFIRST, SPI_MODE0));
 }
 
@@ -221,40 +213,42 @@ void sweep_read()
 }
 boolean state = HIGH;
 boolean isEthanol = LOW;
+int isEthanoltime = 0;
 int receivedData[3];
 int recData;
-int SendCurrent = 10;
+int SendCurrent = 20;
 int ResHigh = 30;
 int ResLow = 0;
 int ledFlag = 0;
-//上升沿触发外部中断
-void irq1()
-{
-    
-//     if(isEthanol)
-//     {
-//       digitalWrite(32,state);
-//       state = !state;
-//          write_dag(65535*SendCurrent/100);
-//          delayMicroseconds(600);
-//           write_dag(0);
-//           isEthanol = LOW;
-//      }
-//       else
-//      {
-//          write_dag(0);
-//     }
-      
-}
+
+int outputflag = 0;
 esp_timer_handle_t  periodic_timer;
 static void periodic_timer_callback(void* arg)
 {
-//    int64_t time_since_boot = esp_timer_get_time();
-//    digitalWrite(32,state);
-//    state = !state;
-      write_dag(65535*SendCurrent/100);
+    int64_t time_since_boot = esp_timer_get_time();
+      if(!isEthanol||isEthanoltime > 5){
+        write_dag(32767);
+        isEthanoltime = 0;
+        digitalWrite(32,0);
+        return ;
+      }
+      if(outputflag)
+      {
+      write_dag(32767+32767*SendCurrent/100);
       delayMicroseconds(600);
-      write_dag(0);
+      write_dag(32767);
+      outputflag = 0;
+      digitalWrite(32,1);
+      }
+      else
+      {
+      write_dag(32767-32767*SendCurrent/100);
+      delayMicroseconds(600);
+      write_dag(32767);
+      outputflag = 1;
+      digitalWrite(32,1);
+      }
+      
 }
 
 void ad_init(void)
@@ -269,7 +263,6 @@ void ad_init(void)
     delay(2);
 //    wait();
   write_reg(REF,REF_);
-  //  write_reg(VBIAS,VBIAS_(0));
   write_reg(DATARATE,DATARATE_);
 }
 
@@ -281,7 +274,8 @@ void setup() {
   
   ad_init();
   da_init();
-  write_dag(0);
+   write_dag(0);
+ //write_dag(32767);
 
   const esp_timer_create_args_t periodic_timer_args = {
             .callback = &periodic_timer_callback  };
@@ -290,24 +284,34 @@ void setup() {
   pinMode(33, OUTPUT);
   pinMode(32, OUTPUT);
   pinMode(25, OUTPUT);
-  pinMode(Trigger, INPUT);
-  attachInterrupt(Trigger, irq1, RISING);    // 设置外部中断
   digitalWrite(33,1);
   digitalWrite(32,0);
   ledcAnalogWrite(LEDC_CHANNEL_0, 8191);
 }
+int nowRes = 0;//传感器当前电阻值
+int lastRes = 0;//传感器上一时刻电阻值
+int nowSubRes = 0;//传感器当前时刻电阻-传感器上一时刻电阻
+int lastSubRes = 0;//上一时刻的nowSubRes
+int nowSubSubRes = 0;//传感器nowSubRes-lastSubRes
 
+float ftemp1[12];
 void loop() {
   delay(5000);
   while(1){
-   
+        //采集传感器数据
         sweep_read();
-        
-        float ftemp1[12];
+        //数据记录
+        lastRes = nowRes;
+        nowRes = Air_data[0];
+        lastSubRes = nowSubRes;
+        nowSubRes = nowRes-lastRes;
+        nowSubSubRes = nowSubRes-lastSubRes;
+        //当前电阻值发送
         ftemp1[0] = Air_data[0];  
-
         Serial.print(ftemp1[0]);
         Serial.print("\r\n");
+
+        //传感器接收上位机数据
         if (Serial.available() >= 3 * sizeof(int))
         {
            byte buffer[sizeof(int)];
@@ -333,26 +337,25 @@ void loop() {
             ResLow = receivedData[2];
           }
         }
-     if((ftemp1[0]/1000)>=ResLow && (ftemp1[0]/1000) <= ResHigh)
+
+
+        
+     if(nowSubSubRes<-500&nowSubRes<-1000)
      {
          isEthanol = HIGH;
-      }
+         isEthanoltime ++;
+     
+     }
       else
       {
         isEthanol = LOW;
+        isEthanoltime  = 0;
+        
       }
         delay(500); 
-//        if(ledFlag)  
-//        {
-//          digitalWrite(33,1);
-//          ledFlag = 0;
-//        }
-//        else
-//        {
-//          digitalWrite(33,0);
-//          ledFlag = 1;
-//        }
+
+
           
-        } 
+     } 
 
 }
