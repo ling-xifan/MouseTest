@@ -10,7 +10,6 @@
 #include <WiFiSTA.h>
 #include <WiFiType.h>
 #include <WiFiUdp.h>
-
 #define Trigger    4
 //pwm_define
 // use first channel of 16 channels (started from zero)
@@ -220,7 +219,7 @@ int SendCurrent = 20;
 int ResHigh = 30;
 int ResLow = 0;
 int ledFlag = 0;
-
+int timer_up = 600;
 int outputflag = 0;
 esp_timer_handle_t  periodic_timer;
 static void periodic_timer_callback(void* arg)
@@ -235,7 +234,7 @@ static void periodic_timer_callback(void* arg)
       if(outputflag)
       {
       write_dag(32767+32767*SendCurrent/100);
-      delayMicroseconds(600);
+      delayMicroseconds(timer_up);
       write_dag(32767);
       outputflag = 0;
       digitalWrite(32,1);
@@ -243,7 +242,7 @@ static void periodic_timer_callback(void* arg)
       else
       {
       write_dag(32767-32767*SendCurrent/100);
-      delayMicroseconds(600);
+      delayMicroseconds(timer_up);
       write_dag(32767);
       outputflag = 1;
       digitalWrite(32,1);
@@ -275,7 +274,6 @@ void setup() {
   ad_init();
   da_init();
    write_dag(0);
- //write_dag(32767);
 
   const esp_timer_create_args_t periodic_timer_args = {
             .callback = &periodic_timer_callback  };
@@ -284,6 +282,7 @@ void setup() {
   pinMode(33, OUTPUT);
   pinMode(32, OUTPUT);
   pinMode(25, OUTPUT);
+  pinMode(4, INPUT);
   digitalWrite(33,1);
   digitalWrite(32,0);
   ledcAnalogWrite(LEDC_CHANNEL_0, 8191);
@@ -293,7 +292,10 @@ int lastRes = 0;//传感器上一时刻电阻值
 int nowSubRes = 0;//传感器当前时刻电阻-传感器上一时刻电阻
 int lastSubRes = 0;//上一时刻的nowSubRes
 int nowSubSubRes = 0;//传感器nowSubRes-lastSubRes
-
+int para1 = 500;//参数1
+int para2 = 1000;//参数2
+int freq = 130;
+int timer_us = 1000000/freq;
 float ftemp1[12];
 void loop() {
   delay(5000);
@@ -331,19 +333,50 @@ void loop() {
            
             ledcAnalogWrite(LEDC_CHANNEL_0, 8191/5*(receivedData[1]));
           }
-          else if(receivedData[0] == 2) //设置检测酒精阈值
+          else if(receivedData[0] == 2) //设置参数
           {
-            ResHigh = receivedData[1];
-            ResLow = receivedData[2];
+            para1 = receivedData[1];
+            para2 = receivedData[2];
+          }
+          else if(receivedData[0] == 3) //设置频率
+          {
+            if(receivedData[1]>=5&&receivedData[1]<=10000)
+            {
+              freq = receivedData[1];
+              timer_us = 1000000/freq;
+              if(timer_us>timer_up)
+              {
+                esp_timer_stop(periodic_timer);
+                esp_timer_start_periodic(periodic_timer, timer_us);
+              }
+            }
+            
+          }
+           else if(receivedData[0] == 4) //上升时间
+          {
+            if(receivedData[1]>=0&&receivedData[1]<=10000)
+            {
+              if(timer_us>timer_up)
+                timer_up = receivedData[1];
+            }
+            
           }
         }
 
 
         
-     if(nowSubSubRes<-500&nowSubRes<-1000)
+     if(nowSubSubRes<(0-para1)&nowSubRes<(0-para2))
      {
+        if(gpio_get_level(GPIO_NUM_4))
+        {
          isEthanol = HIGH;
          isEthanoltime ++;
+        }
+        else
+        {
+         isEthanol = LOW;
+        isEthanoltime  = 0;
+        }
      
      }
       else

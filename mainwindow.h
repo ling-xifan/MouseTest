@@ -105,7 +105,9 @@ private slots:
     void Volt_Send();
     void Current_Send();
     void Set_XY_Range();
-    void Response_Send();
+    void parameters_send();
+    void Freq_send();
+    void timer_up_send();
 };
 
 #endif // MAINWINDOW_H

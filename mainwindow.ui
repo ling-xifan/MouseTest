@@ -17,7 +17,7 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>330</x>
       <y>10</y>
       <width>71</width>
       <height>21</height>
@@ -36,8 +36,8 @@
    <widget class="QLabel" name="label_14">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>20</y>
+      <x>110</x>
+      <y>30</y>
       <width>41</width>
       <height>21</height>
      </rect>
@@ -55,7 +55,7 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>490</x>
+      <x>500</x>
       <y>10</y>
       <width>31</width>
       <height>21</height>
@@ -75,7 +75,7 @@
     <property name="geometry">
      <rect>
       <x>1090</x>
-      <y>300</y>
+      <y>330</y>
       <width>111</width>
       <height>61</height>
      </rect>
@@ -131,7 +131,7 @@
    <widget class="QListView" name="list_ch1">
     <property name="geometry">
      <rect>
-      <x>350</x>
+      <x>490</x>
       <y>60</y>
       <width>91</width>
       <height>31</height>
@@ -166,9 +166,9 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>110</y>
+      <y>140</y>
       <width>951</width>
-      <height>481</height>
+      <height>451</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_5"/>
@@ -177,7 +177,7 @@
     <property name="geometry">
      <rect>
       <x>1090</x>
-      <y>390</y>
+      <y>410</y>
       <width>111</width>
       <height>61</height>
      </rect>
@@ -195,8 +195,8 @@
    <widget class="QLabel" name="label_13">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>20</y>
+      <x>70</x>
+      <y>30</y>
       <width>41</width>
       <height>21</height>
      </rect>
@@ -214,8 +214,8 @@
    <widget class="QComboBox" name="comboVolt1">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>50</y>
+      <x>70</x>
+      <y>60</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -273,8 +273,8 @@
    <widget class="QPushButton" name="pushVoltage">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>50</y>
+      <x>170</x>
+      <y>60</y>
       <width>51</width>
       <height>31</height>
      </rect>
@@ -330,7 +330,7 @@
    <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
      <rect>
-      <x>410</x>
+      <x>420</x>
       <y>10</y>
       <width>61</width>
       <height>21</height>
@@ -368,9 +368,9 @@
    <widget class="QPushButton" name="pushVoltage_2">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>60</y>
-      <width>51</width>
+      <x>920</x>
+      <y>100</y>
+      <width>81</width>
       <height>31</height>
      </rect>
     </property>
@@ -381,15 +381,15 @@
      </font>
     </property>
     <property name="text">
-     <string>设置</string>
+     <string>电流设置</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>230</x>
+      <x>320</x>
       <y>60</y>
-      <width>111</width>
+      <width>141</width>
       <height>31</height>
      </rect>
     </property>
@@ -406,9 +406,9 @@
    <widget class="QLineEdit" name="lineEdit_4">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>60</y>
-      <width>61</width>
+      <x>840</x>
+      <y>100</y>
+      <width>71</width>
       <height>31</height>
      </rect>
     </property>
@@ -503,8 +503,8 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>60</y>
+      <x>760</x>
+      <y>100</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -541,9 +541,9 @@
    <widget class="QLineEdit" name="lineEdit_5">
     <property name="geometry">
      <rect>
-      <x>750</x>
+      <x>700</x>
       <y>60</y>
-      <width>61</width>
+      <width>71</width>
       <height>31</height>
      </rect>
     </property>
@@ -554,13 +554,32 @@
      </font>
     </property>
     <property name="text">
-     <string>30</string>
+     <string>500</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_6">
     <property name="geometry">
      <rect>
-      <x>870</x>
+      <x>840</x>
+      <y>60</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>1000</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
       <y>60</y>
       <width>61</width>
       <height>31</height>
@@ -573,51 +592,13 @@
      </font>
     </property>
     <property name="text">
-     <string>0</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>700</x>
-      <y>60</y>
-      <width>41</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Max</string>
+     <string>参数1</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>830</x>
-      <y>60</y>
-      <width>31</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Min</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushVoltage_4">
-    <property name="geometry">
-     <rect>
-      <x>940</x>
+      <x>780</x>
       <y>60</y>
       <width>51</width>
       <height>31</height>
@@ -630,7 +611,140 @@
      </font>
     </property>
     <property name="text">
-     <string>设置</string>
+     <string>参数2</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushVoltage_4">
+    <property name="geometry">
+     <rect>
+      <x>920</x>
+      <y>60</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>参数设置</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushVoltage_5">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>100</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>频率设置</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_7">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>100</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>130</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>100</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>频率（Hz） </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>100</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>电流持续时间（us）</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushVoltage_6">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>100</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>时间设置</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_8">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>100</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>600</string>
     </property>
    </widget>
   </widget>

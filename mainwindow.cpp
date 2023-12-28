@@ -135,7 +135,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushVoltage, SIGNAL(clicked()), this, SLOT(Volt_Send()));
     connect(ui->pushVoltage_2, SIGNAL(clicked()), this, SLOT(Current_Send()));
     connect(ui->pushVoltage_3, SIGNAL(clicked()), this, SLOT(Set_XY_Range()));
-    connect(ui->pushVoltage_4, SIGNAL(clicked()), this, SLOT(Response_Send()));
+    connect(ui->pushVoltage_4, SIGNAL(clicked()), this, SLOT(parameters_send()));
+    connect(ui->pushVoltage_5, SIGNAL(clicked()), this, SLOT(Freq_send()));
+    connect(ui->pushVoltage_6, SIGNAL(clicked()), this, SLOT(timer_up_send()));
 //    connect(ui->pushVoltage_2, SIGNAL(clicked()), this, SLOT(Send_Warn()));
 
 
@@ -449,16 +451,6 @@ void MainWindow::save_txt()
 }
 
 
-///*************功能：保存图像**************************/
-//void MainWindow::save_graph()
-//{
-//    QPixmap save_P = QPixmap::grabWidget(drawview);
-//    QString save_fileName = QFileDialog::getSaveFileName(this, "Save",
-//        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
-//        "graph files(*.png *.jpg *.bmp)");
-
-//    save_P.save(save_fileName);
-//}
 
 /*************功能：画图（定时器）并显示实时数据******/
 /*开六个线程画*/
@@ -495,21 +487,6 @@ void MainWindow::Draw_Graph()
 
 
 
-///*************功能：改变控温电压**********************/
-//void MainWindow::Volt_Change()
-//{
-//    switch (ui->comboVolt1->currentIndex())
-//    {
-//        case 1: dataToSend[1] = 1; break;
-//        case 2: volt[1] = '2'; break;
-//        case 3: volt[1] = '3'; break;
-//        case 4: volt[1] = '4'; break;
-//        case 5: volt[1] = '5'; break;
-//        default: volt[1] = '0'; break;
-//    }
-
-//    qDebug() << "VOLT is " << volt << endl;
-//}
 /*************功能：发送控温电压**********************/
 void MainWindow::Volt_Send()
 {
@@ -527,15 +504,17 @@ void MainWindow::Volt_Send()
     qint64 bytesWritten = global_port.write(sendData);  // 发送数据
     if (bytesWritten == -1) {
         // 发送失败，处理错误
+          QMessageBox::warning(this, "失败",  QString::number(dataToSend[1]));
         qDebug() << "error" << endl;
     } else {
          qDebug() << "success" << endl;
+          QMessageBox::warning(this, "成功",  QString::number(dataToSend[1]));
     }
   //  global_port.write(volt.toLatin1());        //发电压
-    QMessageBox::warning(this, "Congratulation",  QString::number(dataToSend[1]));
+
 }
 
-/*************功能：发送控温电流**********************/
+/*************功能：发送刺激电流**********************/
 void MainWindow::Current_Send()
 {
     dataToSend[0] = 0;
@@ -552,24 +531,25 @@ void MainWindow::Current_Send()
     qint64 bytesWritten = global_port.write(sendData);  // 发送数据
     if (bytesWritten == -1) {
         // 发送失败，处理错误
+         QMessageBox::warning(this, "失败",  QString::number(dataToSend[1]));
         qDebug() << "error" << endl;
     } else {
          qDebug() << "success" << endl;
+          QMessageBox::warning(this, "成功",  QString::number(dataToSend[1]));
     }
   //  global_port.write(volt.toLatin1());        //发电压
-    QMessageBox::warning(this, "Congratulation",  QString::number(dataToSend[1]));
+
 }
 
 /*************功能：发送响应界限**********************/
-void MainWindow::Response_Send()
+void MainWindow::parameters_send()
 {
-    dataToSend[0] = 2;
-    dataToSend[1] = ui->lineEdit_5->text().toInt();//上边界
-    dataToSend[2] = ui->lineEdit_6->text().toInt();
+    dataToSend[0] = 2;//模式2
+    dataToSend[1] = ui->lineEdit_5->text().toInt();//参数1
+    dataToSend[2] = ui->lineEdit_6->text().toInt();//参数2
     qDebug() << dataToSend[1] << endl;
 
-    if(dataToSend[1] > dataToSend[2])
-    {
+
         QByteArray sendData;
         QDataStream stream(&sendData, QIODevice::WriteOnly);
         stream.setByteOrder(QDataStream::LittleEndian);
@@ -579,13 +559,75 @@ void MainWindow::Response_Send()
         qint64 bytesWritten = global_port.write(sendData);  // 发送数据
         if (bytesWritten == -1) {
             // 发送失败，处理错误
+            QMessageBox::warning(this, "失败",  QString::number(dataToSend[1]));
             qDebug() << "error" << endl;
         } else {
              qDebug() << "success" << endl;
+             QMessageBox::warning(this, "成功",  QString::number(dataToSend[1]));
         }
-    }
-  //  global_port.write(volt.toLatin1());        //发电压
-    QMessageBox::warning(this, "Congratulation",  QString::number(dataToSend[1]));
+
+}
+
+/*************功能：发送频率**********************/
+void MainWindow::Freq_send()
+{
+    dataToSend[0] = 3;//模式3
+    dataToSend[1] = ui->lineEdit_7->text().toInt();//频率设置
+    dataToSend[2] = 0;//参数2
+    qDebug() << dataToSend[1] << endl;
+
+        if(dataToSend[1] >=0 &&dataToSend[0]>=0)
+        {
+            QByteArray sendData;
+            QDataStream stream(&sendData, QIODevice::WriteOnly);
+            stream.setByteOrder(QDataStream::LittleEndian);
+            for (int i = 0; i < 3; ++i) {
+               stream <<  dataToSend[i];  // 将整数数据以文本形式写入字节数组
+            }
+            qint64 bytesWritten = global_port.write(sendData);  // 发送数据
+            if (bytesWritten == -1) {
+                // 发送失败，处理错误
+                 QMessageBox::warning(this, "失败",  QString::number(dataToSend[1]));
+                qDebug() << "error" << endl;
+            } else {
+                 qDebug() << "success" << endl;
+                  QMessageBox::warning(this, "成功",  QString::number(dataToSend[1]));
+            }
+
+        }
+
+}
+
+/*************功能：发送电流持续时间 us**********************/
+void MainWindow::timer_up_send()
+{
+    dataToSend[0] = 4;//模式4
+    dataToSend[1] = ui->lineEdit_8->text().toInt();//频率设置
+    dataToSend[2] = 0;//参数2
+    qDebug() << dataToSend[1] << endl;
+
+        if(dataToSend[1]>=5)
+        {
+        QByteArray sendData;
+        QDataStream stream(&sendData, QIODevice::WriteOnly);
+        stream.setByteOrder(QDataStream::LittleEndian);
+        for (int i = 0; i < 3; ++i) {
+           stream <<  dataToSend[i];  // 将整数数据以文本形式写入字节数组
+        }
+        qint64 bytesWritten = global_port.write(sendData);  // 发送数据
+        if (bytesWritten == -1) {
+            // 发送失败，处理错误
+            QMessageBox::warning(this, "失败",  QString::number(dataToSend[1]));
+            qDebug() << "error" << endl;
+        } else {
+             QMessageBox::warning(this, "成功",  QString::number(dataToSend[1]));
+             qDebug() << "success" << endl;
+        }
+
+        }
+        else{
+        QMessageBox::warning(this, "错误",  QString::number(dataToSend[1]));
+        }
 }
 /*************功能：坐标轴手动设置**********************/
 void MainWindow::Set_XY_Range()

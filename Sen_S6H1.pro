@@ -8,7 +8,7 @@ QT       += core gui charts network serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 #CONFIG += c++11
-TARGET = 1To_Bee
+TARGET = ENoseMouse
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
